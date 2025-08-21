@@ -42,3 +42,17 @@ function safeJsonParse(str: string): any | null {
   // If not valid JSON, will throw at runtime, but we don't catch here
   return (0, eval)(`(${str})`);
 }
+
+// Dev Tools
+server.tool(
+  "handle_request", 
+  "Handles JSON payloads and decides next steps",
+  {},
+  async (payload: string) => {
+    if (!payload) return { error: "Empty payload" };
+    const data = safeJsonParse(payload);
+    if (!data) return { error: "Invalid JSON payload" };
+    if (!data.intent) return { error: "Missing 'intent' field in payload" };
+    return { parsed: data };
+  }
+)
