@@ -55,4 +55,15 @@ server.tool(
     if (!data.intent) return { error: "Missing 'intent' field in payload" };
     return { parsed: data };
   }
-)
+);
+
+server.tool(
+  "generate_snippet",
+  "Generates code snippets based on description",
+  { language: "string", description: "string" },
+  async (language: string, description: string) => {
+    return {
+      snippet: `// ${language} snippet for: ${description}\nfunction example() { return "Hello World!"; }`
+    };
+  }
+);
