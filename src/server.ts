@@ -67,3 +67,13 @@ server.tool(
     };
   }
 );
+
+server.tool(
+  "lint_code",
+  "Performs basic linting on code, and returns any issues",
+  { language: "string", code: "string" },
+  async (language: string, code: string) => {
+    const errors = !code.includes("function") ? ["Missing function declaration"] : [];
+    return { errors };
+  }
+);
