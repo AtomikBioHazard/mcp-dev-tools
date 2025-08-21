@@ -100,3 +100,8 @@ server.tool(
     return { explanation: `This code is a simple function that returns "Hello World!"` };
   }
 );
+
+// Start the Express server
+app.listen(8000, () => {
+  console.info("MCP Dev Tools Server listening on http://localhost:8000");
+})
