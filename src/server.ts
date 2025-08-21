@@ -91,3 +91,12 @@ server.tool(
     return { passed, failed };
   }
 );
+
+server.tool(
+  "explain_code",
+  "Returns explanation of code",
+  { code: "string" },
+  async (code: string) => {
+    return { explanation: `This code is a simple function that returns "Hello World!"` };
+  }
+);
