@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { MCPServer} from '@modelcontextprotocol/sdk/server/mcp.js'
+import { McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 
 // Initialize MCP Dev Tools Server
-const server = new MCPServer({
+const server = new McpServer({
   name: 'MCP Dev Tools Server',
   description: 'A server for MCP development tools',
   version: '1.0.0',
