@@ -77,3 +77,17 @@ server.tool(
     return { errors };
   }
 );
+
+server.tool(
+  "run_tests",
+  "Mocks running tests on code",
+  { code: "string", tests: "string[]" },
+  async (code: string, tests: string[]) => {
+    if (!code || !code.includes("function")) {
+      return { passed: 0, failed: tests.length }; // fail all if code invalid
+    }
+    const passed = tests.filter(test => test.includes("should pass")).length;
+    const failed = tests.filter(test => test.includes("should fail")).length;
+    return { passed, failed };
+  }
+);
