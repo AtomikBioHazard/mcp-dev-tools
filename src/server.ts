@@ -71,9 +71,9 @@ server.tool(
 server.tool(
   "lint_code",
   "Performs basic linting on code, and returns any issues",
-  { language: "string", code: "string" },
-  async (args) => {
-    const errors = !args.code.includes("function") ? ["Missing function declaration"] : [];
+  { language: z.string(), code: z.string() },
+  async ({ code }) => {
+    const errors = !code.includes("function") ? ["Missing function declaration"] : [];
     return { content: [{ type: "text", text: errors.join("\n") || "No lint issues found" }] };
   }
 );
