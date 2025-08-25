@@ -61,9 +61,9 @@ server.tool(
 server.tool(
   "generate_snippet",
   "Generates code snippets based on description",
-  { language: "string", description: "string" },
-  async (args) => {
-    const snippet = `// ${args.language} snippet for: ${args.description}\nfunction example() { return "Hello World!"; }`;
+  { language: z.string(), description: z.string() },
+  async ({ language, description }) => {
+    const snippet = `// ${language} snippet for: ${description}\nfunction example() { return "Hello World!"; }`;
     return { content: [{ type: "text", text: snippet }] };
   }
 );
