@@ -95,8 +95,8 @@ server.tool(
 server.tool(
   "explain_code",
   "Returns explanation of code",
-  { code: "string" },
-  async (args) => {
+  { code: z.string() },
+  async ({ code }) => {
     return { content: [{ type: "text", text: `This code is a simple function that returns "Hello World!"` }] };
   }
 );
