@@ -48,9 +48,8 @@ function safeJsonParse(str: string): any | null {
 server.tool(
   "handle_request",
   "Handles JSON payloads and decides next steps",
-  { payload: "string" },
-  async (args) => {
-    const { payload } = args.payload;
+  { payload: z.string() },
+  async ({ payload }) => {
     if (!payload) return { content: [{ type: "text", text: "Error: Empty payload" }] };
     const data = safeJsonParse(payload);
     if (!data) return { content: [{ type: "text", text: "Error: Invalid JSON payload" }] };
