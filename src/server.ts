@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
+import { z } from 'zod';
 
 // Initialize MCP Dev Tools Server
 const server = new McpServer({
@@ -81,12 +82,16 @@ server.tool(
 server.tool(
   "run_tests",
   "Mocks running tests on code",
-  { code: "string", tests: "string[]" },
+  { code: z.string(), tests: z.array(z.string()) },
   async (args) => {
-    const { code, tests } = args;
-    if (!code || !code.includes("function")) return { passed: 0, failed: tests.length }; // fail all if code invalid
-    const passed = tests.filter((test: string) => test.includes("should pass")).length;
-    const failed = tests.filter((test: string) => test.includes("should fail")).length;
+    const code = args.code as string;
+    const tests = args.tests as string[];
+
+    if (!code || !code.includes("function")) return { content: [{ type: "text", text: `Passed: 0, Failed: ${tests.length}` }] };
+
+    const passed = tests.filter((test) => test.includes("should pass")).length;
+    const failed = tests.filter((test) => test.includes("should fail")).length;
+
     return { content: [{ type: "text", text: `Passed: ${passed}, Failed: ${failed}` }] };
   }
 );
