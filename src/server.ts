@@ -82,10 +82,7 @@ server.tool(
   "run_tests",
   "Mocks running tests on code",
   { code: z.string(), tests: z.array(z.string()) },
-  async (args) => {
-    const code = args.code as string;
-    const tests = args.tests as string[];
-
+  async ({ code, tests }) => {
     if (!code || !code.includes("function")) return { content: [{ type: "text", text: `Passed: 0, Failed: ${tests.length}` }] };
 
     const passed = tests.filter((test) => test.includes("should pass")).length;
