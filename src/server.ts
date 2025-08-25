@@ -45,15 +45,16 @@ function safeJsonParse(str: string): any | null {
 
 // Dev Tools
 server.tool(
-  "handle_request", 
+  "handle_request",
   "Handles JSON payloads and decides next steps",
-  {},
-  async (payload: string) => {
-    if (!payload) return { error: "Empty payload" };
+  { payload: "string" },
+  async (args) => {
+    const { payload } = args.payload;
+    if (!payload) return { content: [{ type: "text", text: "Error: Empty payload" }] };
     const data = safeJsonParse(payload);
-    if (!data) return { error: "Invalid JSON payload" };
-    if (!data.intent) return { error: "Missing 'intent' field in payload" };
-    return { parsed: data };
+    if (!data) return { content: [{ type: "text", text: "Error: Invalid JSON payload" }] };
+    if (!data.intent) return { content: [{ type: "text", text: "Error: Missing 'intent' field in payload" }] };
+    return { content: [{ type: "text", text: JSON.stringify(data) }] };
   }
 );
 
@@ -61,10 +62,9 @@ server.tool(
   "generate_snippet",
   "Generates code snippets based on description",
   { language: "string", description: "string" },
-  async (language: string, description: string) => {
-    return {
-      snippet: `// ${language} snippet for: ${description}\nfunction example() { return "Hello World!"; }`
-    };
+  async (args) => {
+    const snippet = `// ${args.language} snippet for: ${args.description}\nfunction example() { return "Hello World!"; }`;
+    return { content: [{ type: "text", text: snippet }] };
   }
 );
 
@@ -72,9 +72,9 @@ server.tool(
   "lint_code",
   "Performs basic linting on code, and returns any issues",
   { language: "string", code: "string" },
-  async (language: string, code: string) => {
-    const errors = !code.includes("function") ? ["Missing function declaration"] : [];
-    return { errors };
+  async (args) => {
+    const errors = !args.code.includes("function") ? ["Missing function declaration"] : [];
+    return { content: [{ type: "text", text: errors.join("\n") || "No lint issues found" }] };
   }
 );
 
@@ -82,13 +82,12 @@ server.tool(
   "run_tests",
   "Mocks running tests on code",
   { code: "string", tests: "string[]" },
-  async (code: string, tests: string[]) => {
-    if (!code || !code.includes("function")) {
-      return { passed: 0, failed: tests.length }; // fail all if code invalid
-    }
-    const passed = tests.filter(test => test.includes("should pass")).length;
-    const failed = tests.filter(test => test.includes("should fail")).length;
-    return { passed, failed };
+  async (args) => {
+    const { code, tests } = args;
+    if (!code || !code.includes("function")) return { passed: 0, failed: tests.length }; // fail all if code invalid
+    const passed = tests.filter((test: string) => test.includes("should pass")).length;
+    const failed = tests.filter((test: string) => test.includes("should fail")).length;
+    return { content: [{ type: "text", text: `Passed: ${passed}, Failed: ${failed}` }] };
   }
 );
 
@@ -96,8 +95,8 @@ server.tool(
   "explain_code",
   "Returns explanation of code",
   { code: "string" },
-  async (code: string) => {
-    return { explanation: `This code is a simple function that returns "Hello World!"` };
+  async (args) => {
+    return { content: [{ type: "text", text: `This code is a simple function that returns "Hello World!"` }] };
   }
 );
 
